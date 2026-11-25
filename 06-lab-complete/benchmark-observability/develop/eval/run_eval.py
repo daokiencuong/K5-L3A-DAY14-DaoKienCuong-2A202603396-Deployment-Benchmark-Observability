@@ -205,7 +205,7 @@ def main():
                               "passed": gate_ok}
     if args.out:
         Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-        Path(args.out).write_text(json.dumps(report, indent=2, ensure_ascii=False))
+        Path(args.out).write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
         print(f"💾 Đã lưu report: {args.out}")
 
     raise SystemExit(0 if gate_ok else 1)

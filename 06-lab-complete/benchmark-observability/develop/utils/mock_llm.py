@@ -81,6 +81,11 @@ KNOWLEDGE_BASE: list[tuple[list[str], str]] = [
     (["stateless", "redis", "session"],
      "Stateless nghĩa là instance không giữ state trong memory; session được lưu ở Redis. "
      "Nhờ vậy có thể scale ngang nhiều instance sau load balancer."),
+    (["kubernetes", "hpa", "horizontal pod autoscaler"],
+     "Kubernetes HPA tự động scale số pod dựa trên CPU, memory hoặc custom metrics khi tải thay đổi."),
+    (["jwt", "api key"],
+     "JWT là token có thời hạn và chữ ký để kiểm tra tính toàn vẹn; API key thường là secret tĩnh do client gửi. "
+     "Cần bảo vệ cả hai, luân chuyển khi lộ và giới hạn quyền truy cập."),
     (["load balancer", "nginx", "round-robin"],
      "Load balancer như Nginx phân phối request tới nhiều instance theo round-robin, "
      "và bỏ qua instance không healthy."),
