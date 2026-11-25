@@ -4,13 +4,11 @@
 
 ## Deployment status
 
-- Platform: Railway (planned)
-- Public URL: pending authenticated Railway session and deployment
-- Cloud Redis: pending Railway project setup
-- Last cloud validation: not run
+- Platform: Render — Blueprint `06-lab-complete/render.yaml` (web service `day14-agent` + Key Value `day14-redis`, region Singapore)
+- Public URL: https://day14-agent-179v.onrender.com
+- Cloud Redis: Render Key Value service, wired through `REDIS_URL` by the Blueprint
+- Last cloud validation: 2026-11-25 — `/health` 200, `/ready` 200, `POST /ask` without key 401, with key 200
 - Local production readiness: `PASS 12/12` criteria, `41/41` checks; details in `MISSION_ANSWERS.md`
-
-Railway CLI 5.75.0 is installed. The current Windows session is not authenticated (`railway whoami` did not succeed), so no cloud service or public URL has been created yet.
 
 ## Required environment variables
 
@@ -23,7 +21,7 @@ Configure these in the cloud platform. Record names only, never values.
 - `ENVIRONMENT` — `production`
 - `PORT` — supplied by the platform or defaulted by the container
 
-The Render Blueprint alternative is `06-lab-complete/render.yaml`; it creates a web service and Key Value Redis, and wires the Redis connection and generated API key. For a repository-root Blueprint, select that file and retain `rootDir: 06-lab-complete`.
+Render is the deployed platform. The Blueprint `06-lab-complete/render.yaml` creates the web service `day14-agent` and the Key Value service `day14-redis`, wires `REDIS_URL`, and generates `AGENT_API_KEY`. When creating the Blueprint from the repository root, use `06-lab-complete/render.yaml` and keep `rootDir: 06-lab-complete`.
 
 ## Smoke checks
 
@@ -31,18 +29,21 @@ After deployment, set `BASE` to the public service URL and `AGENT_API_KEY` in th
 
 | Check | Expected | Actual |
 |---|---:|---:|
-| `GET /health` | 200 | Pending deployment |
-| `GET /ready` | 200 | Pending hosted Redis |
-| `POST /ask` without API key | 401 | Pending deployment |
-| `POST /ask` with valid API key | 200 | Pending deployment |
+| `GET /health` | 200 | 200 |
+| `GET /ready` | 200 | 200 |
+| `POST /ask` without API key | 401 | 401 |
+| `POST /ask` with valid API key | 200 | 200 |
 
-PowerShell checks that print only HTTP status codes:
+PowerShell checks that print only HTTP status codes (write the JSON body to a file first: PowerShell 5.1 strips the quotes if `-d '{"question":"Hello"}'` is passed directly, which produces a false 422):
 
 ```powershell
-curl.exe -sS -o NUL -w "%{http_code}\n" "$env:BASE/health"
-curl.exe -sS -o NUL -w "%{http_code}\n" "$env:BASE/ready"
-curl.exe -sS -o NUL -w "%{http_code}\n" -X POST "$env:BASE/ask" -H "Content-Type: application/json" -d '{"question":"Hello"}'
-curl.exe -sS -o NUL -w "%{http_code}\n" -X POST "$env:BASE/ask" -H "Content-Type: application/json" -H "X-API-Key: $env:AGENT_API_KEY" -d '{"question":"Hello"}'
+$body = Join-Path $env:TEMP "ask.json"
+'{"question":"Hello"}' | Set-Content -Path $body -Encoding utf8
+
+curl.exe -sS -o NUL -w "%{http_code}`n" "$env:BASE/health"
+curl.exe -sS -o NUL -w "%{http_code}`n" "$env:BASE/ready"
+curl.exe -sS -o NUL -w "%{http_code}`n" -X POST "$env:BASE/ask" -H "Content-Type: application/json" --data-binary "@$body"
+curl.exe -sS -o NUL -w "%{http_code}`n" -X POST "$env:BASE/ask" -H "Content-Type: application/json" -H "X-API-Key: $env:AGENT_API_KEY" --data-binary "@$body"
 ```
 
 Expected output sequence: `200`, `200`, `401`, `200`.

@@ -60,12 +60,13 @@
 
 ## Part 3 — Cloud Deployment
 
-- Nền tảng dự kiến: Railway; chưa deploy vì Railway CLI hiện chưa được đăng nhập trong phiên này.
-- URL public của agent Part 6: chờ xác thực Railway và deploy `06-lab-complete/`.
-- Kết quả smoke check cloud: chưa chạy; cần URL và API key do nền tảng tạo/cấu hình.
+- Nền tảng: **Render** — Blueprint `06-lab-complete/render.yaml`, gồm web service `day14-agent` (Docker, region Singapore) và Key Value `day14-redis`.
+- URL public của agent Part 6: **https://day14-agent-179v.onrender.com**
+- Kết quả smoke check cloud: `GET /health` → **200** (`{"status":"ok","environment":"production"}`); `GET /ready` → **200** (`{"ready":true}`); `POST /ask` không key → **401**; `POST /ask` có key → **200**.
+- Biến môi trường đặt trên Render (chỉ tên, không ghi giá trị): `AGENT_API_KEY` (generateValue), `REDIS_URL` (lấy từ Key Value), `RATE_LIMIT_PER_MINUTE=10`, `DAILY_BUDGET_USD=10.0`, `ENVIRONMENT=production`; `PORT` do Render cấp.
 - So sánh: `railway.toml` khai báo Dockerfile builder, health-check `/health` và restart khi lỗi; `render.yaml` là Blueprint mô tả cả web service lẫn Redis, liên kết `REDIS_URL`, sinh `AGENT_API_KEY`, chọn vùng Singapore và health-check. Railway thuận tiện để tạo project/service từ CLI; Render Blueprint thể hiện hạ tầng nhiều service trong một file cấu hình.
 - Cloud Run pipeline: Cloud Build chạy tests trước, rồi build image theo `$COMMIT_SHA` và `latest`; tiếp theo push image lên Container Registry. Cuối cùng `gcloud run deploy` phát hành image theo commit vào `asia-southeast1`, cấu hình scale, CPU/RAM, timeout và đọc secret từ Secret Manager. `service.yaml` mô tả service Cloud Run, concurrency, giới hạn tài nguyên và autoscaling.
-- Ảnh: `screenshots/` (chưa có ảnh dashboard/deploy/smoke test vì chưa có phiên cloud đã đăng nhập).
+- Ảnh: `screenshots/dashboard.png`, `screenshots/running.png`, `screenshots/test.png`.
 
 ## Part 4 — API Security
 
