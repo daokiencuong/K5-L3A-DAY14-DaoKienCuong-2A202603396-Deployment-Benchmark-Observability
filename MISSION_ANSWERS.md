@@ -99,7 +99,7 @@ Cost guard kiểm tra budget trước khi gọi LLM; sau khi có response thì �
 ## Part 6 — Final Project
 
 - Lệnh kiểm tra đầy đủ: `cd 06-lab-complete; python check_production_ready.py`
-- Checker đã chạy đầy đủ trong Ubuntu WSL2 với Docker; kết quả **12/12 tiêu chí, 41/41 checks passed**.
+- Checker đã chạy đầy đủ trong Ubuntu 24.04 (WSL2) với Docker; kết quả **12/12 tiêu chí, 44/44 checks passed**, bao gồm `--public-url https://day14-agent-179v.onrender.com` → `/health` 200.
 
 ```text
 ✅ Dockerfile (multi-stage, < 500 MB)
@@ -114,7 +114,7 @@ Cost guard kiểm tra budget trước khi gọi LLM; sau khi có response thì �
 ✅ Structured logging
 ✅ Graceful shutdown
 ✅ Public URL ready (Railway / Render config)
-Result: 12/12 tiêu chí đạt · 41/41 checks passed
+Result: 12/12 tiêu chí đạt · 44/44 checks passed
 PASS 12/12 — PRODUCTION READY
 ```
 
@@ -122,5 +122,5 @@ PASS 12/12 — PRODUCTION READY
 
 | Ngày | Phần/code | Câu hỏi đã hỏi AI | Gợi ý nhận được | Tôi đã tự sửa và kiểm tra thế nào |
 |---|---|---|---|---|
-| 2026-11-25 | Part 6 — `06-lab-complete/` | Hoàn thiện agent theo 12 tiêu chí production readiness | Thiết kế env config, API key, Redis sliding-window rate limit/cost guard, health/readiness, JSON logging, graceful shutdown, Docker multi-stage/Compose và Railway config | Tự rà code, không sửa checker; chạy đầy đủ `check_production_ready.py` trong Ubuntu WSL2: 12/12 tiêu chí, 41/41 checks passed; Docker stop exit code 0 trong 0.7 giây |
+| 2026-11-25 | Part 6 — `06-lab-complete/` | Hoàn thiện agent theo 12 tiêu chí production readiness | Thiết kế env config, API key, Redis sliding-window rate limit/cost guard, health/readiness, JSON logging, graceful shutdown, Docker multi-stage/Compose và Railway config | Tự rà code, không sửa checker; chạy đầy đủ `check_production_ready.py` trong Ubuntu 24.04 WSL2: 12/12 tiêu chí, 44/44 checks passed (lần chạy cuối, có `--public-url`); Docker stop exit code 0 trong 1.1 giây |
 | 2026-11-25 | Part 7 — observability + đóng gói | Cách chạy stack, lấy trace/alert và điền báo cáo | Lệnh Compose, PromQL/API Prometheus, API Jaeger v3, cách đối chiếu CSV/JSON | Tự chạy stack `k5-day14-observability`, tạo tải bằng Locust, chụp 4 ảnh, lấy `trace_id` và log JSON thật, đối chiếu số liệu với CSV/JSON trước khi điền report |

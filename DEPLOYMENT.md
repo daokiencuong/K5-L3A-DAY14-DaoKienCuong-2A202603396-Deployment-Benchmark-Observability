@@ -8,7 +8,7 @@
 - Public URL: https://day14-agent-179v.onrender.com
 - Cloud Redis: Render Key Value service, wired through `REDIS_URL` by the Blueprint
 - Last cloud validation: 2026-11-25 — `/health` 200, `/ready` 200, `POST /ask` without key 401, with key 200
-- Local production readiness: `PASS 12/12` criteria, `41/41` checks; details in `MISSION_ANSWERS.md`
+- Local production readiness: `PASS 12/12` criteria, `44/44` checks (Ubuntu 24.04 + Docker, including public URL check); details in `MISSION_ANSWERS.md`
 
 ## Required environment variables
 
@@ -50,8 +50,8 @@ Expected output sequence: `200`, `200`, `401`, `200`.
 
 ## Screenshots
 
-Capture these after deployment, with all secret values hidden:
+Included in `screenshots/`, with all secret values hidden:
 
-- `screenshots/dashboard.png` — cloud project/service dashboard
-- `screenshots/running.png` — successful deployment and running service
-- `screenshots/test.png` — four smoke-check status codes
+- `screenshots/dashboard.png` — Render workspace: `day14-agent` **Deployed** (Docker, Singapore) and `day14-redis` **Available**
+- `screenshots/running.png` — service page: **Live**, Blueprint managed, public URL visible
+- `screenshots/test.png` — four smoke checks: `/health` 200, `/ready` 200, `/ask` without key 401, `/ask` with key 200 (API key value hidden)
